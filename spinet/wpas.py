@@ -729,7 +729,6 @@ class WPASupplicant(object):
             return id
 
 
-    @cached_property_with_ttl(ttl=5)
     def interfaces(self):
         return self.request('INTERFACES').splitlines()[::-1]
 
