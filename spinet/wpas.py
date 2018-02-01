@@ -729,6 +729,7 @@ class WPASupplicant(object):
             return id
 
 
+    @cached_property_with_ttl(ttl=5)
     def interfaces(self):
         return self.request('INTERFACES').splitlines()[::-1]
 
@@ -800,8 +801,12 @@ class P2PWPASupplicant(WPSWPASupplicant):
 
     def start(self, ifname):
         super().start(ifname)
-        self.p2p_remote = self._ifname2remote('p2p-' + ifname)
-        self.start_event_thread('p2p-' + ifname)
+
+        for i in self.interfaces():
+            if i.startswith('p2p-dev-'):
+                self.p2p_remote = self._ifname2remote('p2p-dev-' + ifname)
+                self.start_event_thread('p2p-dev-' + ifname)
+                break
 
 
     def stop(self):
