@@ -247,7 +247,7 @@ commissioner. The global symbol table is set to the module spinet.cms.main.
         '''
         banner = '''Python %s
 Type "help", "copyright", "credits" or "license" for more information.''' % sys.version
-        code.interact(banner, local=sys.modules['__main__'].__dict__)
+        code.interact(banner, local=sys.modules['spinet.cms.__main__'].__dict__)
 
 
     def postloop(self):
