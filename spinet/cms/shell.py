@@ -170,7 +170,7 @@ commissioner.
 
     def do_services(self, *args):
         print(tabulate([
-            [addr, srv.services[addr].rdata.as_str] for addr in srv.services.keys()
+            [addr, repr(srv.services[addr].rdata.attrs)] for addr in srv.services.keys()
         ], ['Address', 'Instance'], tablefmt='psql'))
 
 

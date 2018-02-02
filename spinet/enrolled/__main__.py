@@ -49,8 +49,9 @@ def main():
     log.info('Enrolled [%s,%s,%s]\nwpa_supplicant %s [%s]' % (enrolled.name, enrolled.ifname, enrolled.addr[0], enrolled.sup.uuid, enrolled.sup.address))
 
     from . import srv
-    ptr = srv.create_PTR('%s._spinet._tcp.local.' % enrolled.name)
-    enrolled.sup.p2p_service_add(ptr)
+    name = '_spinet._tcp.local.'
+    txt = srv.create_TXT(name, {'uri':' http://[%s]:%d/' % (enrolled.addr[0], enrolled.port)})
+    enrolled.sup.p2p_service_add(txt)
 
     from . import api
     api.apply_network_configuration()

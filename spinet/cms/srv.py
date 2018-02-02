@@ -43,7 +43,7 @@ def delete_srv(ifname, data, **kwds):
 def start_discovery():
     global discovering, request_id
     if not discovering:
-        query = ANQPQuery(ANQPData(DomainName('_spinet._tcp.local.'), ANQPData.TYPE_PTR))
+        query = ANQPQuery(ANQPData(DomainName('_spinet._tcp.local.'), ANQPData.TYPE_TXT))
         request_id = sup.p2p_serv_disc_req(query)
         discovering = True
 
