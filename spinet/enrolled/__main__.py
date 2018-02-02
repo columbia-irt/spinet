@@ -47,7 +47,7 @@ def main():
     log.info('Enrolled [%s] [%s], wpa_supplicant %s [%s]' % (enrolled.name, enrolled.ifname, enrolled.sup.uuid, enrolled.sup.address))
 
     from . import srv
-    ptr = srv.create_PTR('%s._cms._tcp.local.' % enrolled.name)
+    ptr = srv.create_PTR('%s._spinet._tcp.local.' % enrolled.name)
     enrolled.sup.p2p_service_add(ptr)
 
     from . import api
