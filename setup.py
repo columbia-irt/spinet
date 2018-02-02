@@ -22,7 +22,8 @@ setup(
     packages=find_packages(),
     install_requires=[
         'blinker',
-        'cached-property'
+        'cached-property',
+        'pyroute2'
     ],
 
     extras_require={

@@ -42,7 +42,7 @@ def main():
     from . import peer, ping
 
     from .shell import Shell
-    sh = Shell('Commissioner [%s] [%s], wpa_supplicant %s [%s]' % (cms.name, cms.ifname, cms.sup.uuid, cms.sup.address), '[%s]> ' % cms.name)
+    sh = Shell('Commissioner [%s,%s,%s]\nwpa_supplicant [%s,%s]' % (cms.name, cms.ifname, cms.addr[0], cms.sup.uuid, cms.sup.address), '[%s]> ' % cms.name)
     sh.cmdloop()
 
     cms.sup.stop()

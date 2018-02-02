@@ -8,14 +8,12 @@ def main():
     p.add_argument('-d', '--db',      help='SQLite database file (%s)' % enrolled.db_path, default=enrolled.db_path)
     p.add_argument('-n', '--name',    help='Node name (%s)' % enrolled.name, default=enrolled.name)
     p.add_argument('-p', '--port',    help='HTTP API listen port (%d)' % enrolled.port, type=int, default=enrolled.port)
-    p.add_argument('-a', '--addr',    help='HTTP API listen IP address (%s)' % enrolled.addr, default=enrolled.addr)
     args = p.parse_args()
 
     enrolled.ifname  = args.ifname
     enrolled.name    = args.name
     enrolled.db_path = args.db
     enrolled.db      = sqlite3.connect(enrolled.db_path)
-    enrolled.addr    = args.addr
     enrolled.port    = args.port
     enrolled.verbose = args.verbose
 
@@ -41,10 +39,14 @@ def main():
     from . import data
     data.initialize_db()
 
+    from .. import ipv6
+    log.debug('Adding address %s to interface %s' % (enrolled.addr[0], enrolled.ifname))
+    ipv6.add_addr(enrolled.ifname, enrolled.addr)
+
     enrolled.sup.start(enrolled.ifname)
     enrolled.sup.set('device_name', enrolled.name)
 
-    log.info('Enrolled [%s] [%s], wpa_supplicant %s [%s]' % (enrolled.name, enrolled.ifname, enrolled.sup.uuid, enrolled.sup.address))
+    log.info('Enrolled [%s,%s,%s]\nwpa_supplicant %s [%s]' % (enrolled.name, enrolled.ifname, enrolled.addr[0], enrolled.sup.uuid, enrolled.sup.address))
 
     from . import srv
     ptr = srv.create_PTR('%s._spinet._tcp.local.' % enrolled.name)
@@ -55,7 +57,9 @@ def main():
 
     enrolled.sup.p2p_find()
 
-    api.app.run(host=enrolled.addr, port=enrolled.port)
+    api.app.run(host='::', port=enrolled.port)
+
+    ipv6.del_addr(enrolled.ifname, enrolled.addr)
 
 #
 # The extra level of indirection via the main function is needed for setuptool
