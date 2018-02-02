@@ -191,18 +191,9 @@ commissioner.
 
 
     def do_invite(self, args):
-        'invite <peer> <ifname>'
-        peer, ifname = args.split(maxsplit=1)
-        peer = [peer]
-
-        with cms.sup.interface(ifname):
-            cms.sup.wps_pbc()
-
-        print('Inviting:', end='')
-        for addr in peer:
-            print(' %s' % addr, end='')
-            cms.sup.p2p_invite(addr, ifname)
-        print('')
+        'invite <addr> <ifname>'
+        addr, ifname = args.split(maxsplit=1)
+        cms.sup.p2p_invite(addr, ifname)
 
 
     def do_status(self, args):
