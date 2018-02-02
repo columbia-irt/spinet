@@ -33,6 +33,14 @@ def main():
             cms.sup.wps_pbc()
 
 
+    @cms.on('WPS-PIN-NEEDED')
+    @cms.on('P2P-PROV-DISC-SHOW-PIN')
+    def activate_pin(ifname, data, sup, **kwds):
+        with cms.sup.interface(ifname):
+            log.debug('Activating PIN on interface %s' % ifname)
+            cms.sup.wps_pin('12345670')
+
+
     from . import data
     data.initialize_db()
 
