@@ -796,6 +796,20 @@ class WPSWPASupplicant(WPASupplicant):
         self.request_ok('WPS_PBC')
 
 
+    def wps_pin(self, pin, addr='any'):
+        '''wps_pin <any|address> <PIN>
+
+        Start WPS PIN method. This allows a single WPS Enrollee to connect to
+        the AP/GO. This is used on the GO when a P2P client joins an existing
+        group. The second parameter is the address of the Enrollee or a string
+        "any" to allow any station to use the entered PIN (which will restrict
+        the PIN for one-time-use). PIN is the Enrollee PIN read either from a
+        label or display on the P2P Client/WPS Enrollee.
+        '''
+        self.request_check('WPS_PIN %s %s' % (addr, pin), response=pin)
+
+
+
 class P2PWPASupplicant(WPSWPASupplicant):
 
     def start(self, ifname):
