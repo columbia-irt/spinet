@@ -810,7 +810,11 @@ class P2PWPASupplicant(WPSWPASupplicant):
 
     def stop(self):
         super().stop()
-        del self.p2p_remote
+        try:
+            del self.p2p_remote
+        except AttributeError:
+            pass
+
 
 
     @cached_property_with_ttl(ttl=5)
