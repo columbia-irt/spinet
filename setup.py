@@ -23,7 +23,8 @@ setup(
     install_requires=[
         'blinker',
         'cached-property',
-        'pyroute2'
+        'pyroute2',
+        'pyopenssl'
     ],
 
     extras_require={
