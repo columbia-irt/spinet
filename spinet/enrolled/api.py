@@ -60,7 +60,8 @@ def list_networks():
 def get_network(id):
     c = db.cursor()
     c.execute('SELECT attrs FROM net WHERE id=?', (id,))
-    return jsonify(json.loads(c.fetchone()[0]))
+    attrs = json.loads(c.fetchone()[0])
+    return jsonify({**attrs, **{'id': id}})
 
 
 @app.route('/net/<int:id>', methods=['DELETE'])
@@ -75,14 +76,17 @@ def delete_network(id):
 def add_network():
     data = request.get_json()
 
+    try:
+        del data['id']
+    except KeyError:
+        pass
+
     c = db.cursor()
     c.execute('INSERT INTO net (attrs) VALUES (?)', (json.dumps(data),))
     db.commit()
 
-    c.execute('SELECT attrs FROM net where id=?', (c.lastrowid,))
-    attrs = c.fetchone()
+    return get_network(c.lastrowid)
 
-    return jsonify(attrs)
 
 
 @app.route('/apply', methods=['POST'])
