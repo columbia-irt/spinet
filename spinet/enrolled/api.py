@@ -52,7 +52,7 @@ def hello_world():
 def list_networks():
     c = db.cursor()
     c.execute('SELECT id, attrs FROM net')
-    data = [(id, json.loads(attrs)) for id, attrs in c.fetchall()]
+    data = [json.loads(attrs).update({'id': id}) for id, attrs in c.fetchall()]
     return jsonify(data)
 
 
