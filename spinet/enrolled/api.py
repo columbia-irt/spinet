@@ -20,14 +20,19 @@ def apply_network_configuration():
     try:
         for data in db.cursor().execute('SELECT attrs FROM net').fetchall():
             attrs = json.loads(data[0])
+
+            if attrs['type'] == 'Open':
+                attrs['key_mgmt'] = attrs.get('key_mgmt', 'NONE')
+
+            del attrs['type']
             log.debug('Configuring network %s' % attrs['ssid'])
             ids.append(sup.create_network(attrs))
 
         log.debug('Enabling all newly configured networks')
         for id in ids:
             sup.enable_network(id)
-    except Exception:
-        logging.exception('Error while applying network configuration')
+    except Exception as e:
+        logging.exception('Error while applying network configuration: %s', e)
         for id in ids:
             sup.remove_network(id)
         raise
