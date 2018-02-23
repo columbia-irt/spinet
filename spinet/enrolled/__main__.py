@@ -42,7 +42,14 @@ from .. import wpas
 @enrolled.on('P2P-INVITATION-RECEIVED')
 def connect(ifname, data, **kwds):
     data = wpas.parse_kv_line(data)
-    go = data['go_dev_addr']
+
+    try:
+        go = data['go_dev_addr']
+        if go == '00:00:00:00:00:00':
+            raise KeyError()
+    except KeyError:
+        go = data['bssid']
+
     log.debug('Accepting invitation from GO %s for BSSID %s' % (go, data['bssid']))
     enrolled.sup.p2p_connect(go, join=True)
 
