@@ -941,7 +941,7 @@ class P2PWPASupplicant(WPSWPASupplicant):
         self.request_ok('P2P_INVITE group=%s peer=%s' % (group, addr))
 
 
-    def p2p_connect(self, addr, wps_method='12345670', pin_type='', persistent='', join='', go_intent='', freq='', auto='', ssid=''):
+    def p2p_connect(self, addr, wps_method='pbc', pin_type='', persistent='', join='', go_intent='', freq='', auto='', ssid=''):
         '''Start P2P group formation with a discovered P2P peer.
 
         This includes optional group owner negotiation, group interface setup,
