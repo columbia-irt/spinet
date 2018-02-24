@@ -29,7 +29,8 @@ setup(
 
     extras_require={
         'enrolled': [
-            'flask'
+            'flask',
+            'proquint'
         ],
         'commissioner': [
             'tabulate',

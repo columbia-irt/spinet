@@ -27,10 +27,16 @@ def generate_cert(path, name, key_path):
     with open(path, 'wb') as f:
         f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, c))
 
+    return c
 
-def pubkeySHA256(cert_path):
+
+def load_certificate(cert_path):
     with open(cert_path, 'r') as cf:
-        c = crypto.load_certificate(crypto.FILETYPE_PEM, cf.read())
-    key = c.get_pubkey()
+        return crypto.load_certificate(crypto.FILETYPE_PEM, cf.read())
+
+
+
+def pubkeySHA256(cert):
+    key = cert.get_pubkey()
     der = crypto.dump_publickey(crypto.FILETYPE_ASN1, key)
     return base64.b64encode(hashlib.sha256(der).digest()).decode()

@@ -13,3 +13,7 @@ def initialize_db():
       created text    DEFAULT CURRENT_TIMESTAMP)
     ''')
     db.commit()
+
+from spinet.config import Config
+
+config = Config(db)

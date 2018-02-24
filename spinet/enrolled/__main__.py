@@ -56,6 +56,52 @@ def connect(ifname, data, **kwds):
 from . import data
 data.initialize_db()
 
+
+# Device name. First check if a name was given on the command line. If not,
+# see whether we have a name saved in the configuration table in the database.
+# If not, generate a new random device name and save it to the database.
+#
+if enrolled.name is None:
+    try:
+        enrolled.name = data.config['name']
+    except KeyError:
+        log.debug('Generating a new random device name')
+        from spinet.name import generate_name
+        enrolled.name = generate_name()
+        data.config['name'] = enrolled.name
+
+log.info('Device name: %s' % enrolled.name)
+
+
+from . import cert
+
+#
+# Try to open a previously saved device private key. If it does not exist,
+# generate a new private key.
+#
+if not os.path.isfile(enrolled.key_path):
+    log.info('Generating new device private key')
+    cert.generate_privkey(enrolled.key_path)
+
+#
+# Try to open a device public key certificate. If it does not exist or if its
+# common name does not match the device name, generate a new certificate.
+#
+crt = None
+if os.path.isfile(enrolled.crt_path):
+    crt = cert.load_certificate(enrolled.crt_path)
+    if enrolled.name != crt.get_subject().CN:
+        log.info('Certificate name does not match device name')
+        crt = None
+
+if crt is None:
+    log.info('Generating new device certificate')
+    crt = cert.generate_cert(enrolled.crt_path, enrolled.name, enrolled.key_path)
+
+log.info('Device public key: %s' % cert.pubkeySHA256(crt))
+
+
+
 from .. import ipv6
 log.debug('Adding address %s to interface %s' % (enrolled.addr[0], enrolled.ifname))
 ipv6.add_addr(enrolled.ifname, enrolled.addr)
@@ -75,17 +121,7 @@ api.apply_network_configuration()
 
 enrolled.sup.p2p_find()
 
-from . import cert
 
-if not os.path.isfile(enrolled.key_path):
-    log.debug('Generating device private key')
-    cert.generate_privkey(enrolled.key_path)
-
-if not os.path.isfile(enrolled.crt_path):
-    log.debug('Generating self-signed device certificate')
-    cert.generate_cert(enrolled.crt_path, enrolled.name, enrolled.key_path)
-
-log.info('Pubkey: %s' % cert.pubkeySHA256(enrolled.crt_path))
 
 def main():
     api.app.run(host='::', port=enrolled.port, ssl_context=(enrolled.crt_path, enrolled.key_path))
