@@ -69,7 +69,7 @@ if enrolled.name is None:
         addr = netifaces.ifaddresses(enrolled.ifname)[netifaces.AF_LINK][0]['addr']
         log.info('Generating a new device name from HW address %s' % addr)
         from spinet.name import generate_name
-        enrolled.name = generate_name(addr.tolower())
+        enrolled.name = generate_name(addr.lower())
         data.config['name'] = enrolled.name
 
 log.info('Device name: %s' % enrolled.name)
