@@ -27,14 +27,18 @@ data.initialize_db()
 
 import pyqrcode
 import netifaces
-from tabulate import tabulate
+import base64
+import cbor
 
+addr = netifaces.ifaddresses(enrolled.ifname)[netifaces.AF_LINK][0]['addr']
 name = data.config['name']
 crt = cert.load_cert(enrolled.crt_path)
 fpr = cert.PubkeyFingerprint(crt.get_pubkey())
-addr = netifaces.ifaddresses(enrolled.ifname)[netifaces.AF_LINK][0]['addr']
 
-qr = pyqrcode.create(fpr.as_base64())
+qrdata = cbor.dumps([1, name, fpr.as_bytes()])
+qr = pyqrcode.create(base64.b64encode(qrdata))
+
+from tabulate import tabulate
 
 def main():
     print(qr.terminal(quiet_zone=1))

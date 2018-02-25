@@ -40,7 +40,8 @@ setup(
         'label': [
             'pyopenssl',
             'tabulate',
-            'netifaces'
+            'netifaces',
+            'cbor'
         ]
     },
 
