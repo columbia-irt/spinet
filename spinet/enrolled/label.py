@@ -41,11 +41,11 @@ qr = pyqrcode.create(base64.b64encode(qrdata))
 from tabulate import tabulate
 
 def main():
-    print(qr.terminal(quiet_zone=1))
     print(tabulate([['HW Address', addr],
                     ['Device Name', name],
                     ['Public Key', fpr.as_base64()]],
                    [], tablefmt="psql"))
+    print(qr.terminal(quiet_zone=1))
 
 
 # setuptool entry_points need a function to run, so we execute the last
