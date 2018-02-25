@@ -65,9 +65,11 @@ if enrolled.name is None:
     try:
         enrolled.name = data.config['name']
     except KeyError:
-        log.debug('Generating a new random device name')
+        import netifaces
+        addr = netifaces.ifaddresses(enrolled.ifname)[netifaces.AF_LINK][0]['addr']
+        log.info('Generating a new device name from HW address %s' % addr)
         from spinet.name import generate_name
-        enrolled.name = generate_name()
+        enrolled.name = generate_name(addr)
         data.config['name'] = enrolled.name
 
 log.info('Device name: %s' % enrolled.name)
