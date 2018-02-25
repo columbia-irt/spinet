@@ -30,13 +30,18 @@ def generate_cert(path, name, key_path):
     return c
 
 
-def load_certificate(cert_path):
+def load_cert(cert_path):
     with open(cert_path, 'r') as cf:
         return crypto.load_certificate(crypto.FILETYPE_PEM, cf.read())
 
 
+class PubkeyFingerprint(object):
+    def __init__(self, pubkey):
+        der = crypto.dump_publickey(crypto.FILETYPE_ASN1, pubkey)
+        self.fpr = hashlib.sha256(der).digest()
 
-def pubkeySHA256(cert):
-    key = cert.get_pubkey()
-    der = crypto.dump_publickey(crypto.FILETYPE_ASN1, key)
-    return base64.b64encode(hashlib.sha256(der).digest()).decode()
+    def as_base64(self):
+        return base64.b64encode(self.fpr).decode()
+
+    def as_bytes(self):
+        return self.fpr

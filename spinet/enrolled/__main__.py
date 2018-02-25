@@ -9,7 +9,7 @@ import spinet.enrolled as enrolled
 import argparse, sqlite3
 
 p = argparse.ArgumentParser(prog='enrolled')
-p.add_argument('-i', '--ifname',  help='Interface name (%s)' % enrolled.ifname)
+p.add_argument('-i', '--ifname',  help='Interface name (%s)' % enrolled.ifname, default=enrolled.ifname)
 p.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true')
 p.add_argument('-d', '--db',      help='SQLite database file (%s)' % enrolled.db_path, default=enrolled.db_path)
 p.add_argument('-n', '--name',    help='Node name (%s)' % enrolled.name, default=enrolled.name)
@@ -69,7 +69,7 @@ if enrolled.name is None:
         addr = netifaces.ifaddresses(enrolled.ifname)[netifaces.AF_LINK][0]['addr']
         log.info('Generating a new device name from HW address %s' % addr)
         from spinet.name import generate_name
-        enrolled.name = generate_name(addr)
+        enrolled.name = generate_name(addr.tolower())
         data.config['name'] = enrolled.name
 
 log.info('Device name: %s' % enrolled.name)
@@ -91,7 +91,7 @@ if not os.path.isfile(enrolled.key_path):
 #
 crt = None
 if os.path.isfile(enrolled.crt_path):
-    crt = cert.load_certificate(enrolled.crt_path)
+    crt = cert.load_cert(enrolled.crt_path)
     if enrolled.name != crt.get_subject().CN:
         log.info('Certificate name does not match device name')
         crt = None
@@ -100,7 +100,8 @@ if crt is None:
     log.info('Generating new device certificate')
     crt = cert.generate_cert(enrolled.crt_path, enrolled.name, enrolled.key_path)
 
-log.info('Device public key: %s' % cert.pubkeySHA256(crt))
+fpr = cert.PubkeyFingerprint(crt.get_pubkey())
+log.info('Device public key: %s' % fpr.as_base64())
 
 
 

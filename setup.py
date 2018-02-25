@@ -36,12 +36,18 @@ setup(
             'tabulate',
             'netifaces',
             'urllib3'
+        ],
+        'label': [
+            'pyopenssl',
+            'tabulate',
+            'netifaces'
         ]
     },
 
     entry_points={
         'console_scripts': [
             'enrolled=spinet.enrolled.__main__:main',
+            'device-label=spinet.enrolled.label:main',
             'commissioner=spinet.cms.__main__:main'
         ]
     }
