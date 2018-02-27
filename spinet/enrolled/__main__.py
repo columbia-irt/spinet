@@ -115,9 +115,12 @@ enrolled.sup.set('device_name', enrolled.name)
 log.info('Enrolled [%s,%s,%s]\nwpa_supplicant %s [%s]' % (enrolled.name, enrolled.ifname, enrolled.addr[0], enrolled.sup.uuid, enrolled.sup.address))
 
 from . import srv
-name = '_spinet._tcp.local.'
-txt = srv.create_TXT(name, {'uri':' https://[%s]:%d/' % (enrolled.addr[0], enrolled.port)})
+domain = '%s._spinet._tcp.local.' % enrolled.name
+txt = srv.create_TXT(domain, {'uri':' https://[%s]:%d/' % (enrolled.addr[0], enrolled.port)})
 enrolled.sup.p2p_service_add(txt)
+
+ptr = srv.create_PTR(domain)
+enrolled.sup.p2p_service_add(ptr)
 
 from . import api
 api.apply_network_configuration()
