@@ -2,7 +2,7 @@ import logging
 import sqlite3
 import json
 from   flask import Flask, jsonify, request
-
+from time import sleep
 from . import sup, db
 
 log = logging.getLogger(__name__)
@@ -91,5 +91,6 @@ def add_network():
 
 @app.route('/apply', methods=['POST'])
 def apply():
+    sleep(2)
     apply_network_configuration()
     return '', 204
