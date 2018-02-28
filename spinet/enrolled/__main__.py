@@ -16,6 +16,7 @@ p.add_argument('-n', '--name',    help='Node name (%s)' % enrolled.name, default
 p.add_argument('-p', '--port',    help='HTTP API listen port (%d)' % enrolled.port, type=int, default=enrolled.port)
 p.add_argument('-c', '--cert',    help='Device certificate file (%s)' % enrolled.crt_path, default=enrolled.crt_path)
 p.add_argument('-k', '--key',     help='Device private key file (%s)' % enrolled.key_path, default=enrolled.key_path)
+p.add_argument('-I', '--ip',      help='IP address', default=enrolled.ip)
 args = p.parse_args()
 
 enrolled.ifname   = args.ifname
@@ -26,6 +27,10 @@ enrolled.port     = args.port
 enrolled.verbose  = args.verbose
 enrolled.crt_path = args.cert
 enrolled.key_path = args.key
+enrolled.ip       = args.ip
+
+if enrolled.ip != None:
+    enrolled.addr = (enrolled.ip, 24)
 
 from .. import logger
 logger.setup()

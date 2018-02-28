@@ -14,3 +14,4 @@ sup       = wpas.P2PWPASupplicant() # Global WPASupplicant instance
 on        = sup.on                  # Decorator for event receivers from the main WPASupplicant object
 crt_path  = '/data/cert.pem'        # Path to the file with the device's certificate
 key_path  = '/data/key.pem'         # Path to the file with the device's private key
+ip        = None                    # IP address
