@@ -1,6 +1,7 @@
 import os
 import binascii
 from pyroute2 import IPRoute
+import random
 
 
 def random_addr():
@@ -8,6 +9,10 @@ def random_addr():
     '''
     d = binascii.hexlify(os.urandom(8)).decode('ascii')
     return ('2222::%s:%s:%s:%s' % (d[0:4], d[4:8], d[8:12], d[12:16]), 64)
+
+
+def random_addr_ipv4():
+    return (('192.168.49.%s' % random.randint(2,253)), 24)
 
 
 def add_addr(ifname, addr):

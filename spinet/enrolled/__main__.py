@@ -116,7 +116,7 @@ log.info('Enrolled [%s,%s,%s]\nwpa_supplicant %s [%s]' % (enrolled.name, enrolle
 
 from . import srv
 domain = '%s._spinet._tcp.local.' % enrolled.name
-txt = srv.create_TXT(domain, {'uri':' https://[%s]:%d/' % (enrolled.addr[0], enrolled.port)})
+txt = srv.create_TXT(domain, {'uri':' https://%s:%d/' % (enrolled.addr[0], enrolled.port)})
 enrolled.sup.p2p_service_add(txt)
 
 ptr = srv.create_PTR(domain)
@@ -130,7 +130,7 @@ enrolled.sup.p2p_find()
 
 
 def main():
-    api.app.run(host='::', port=enrolled.port, ssl_context=(enrolled.crt_path, enrolled.key_path))
+    api.app.run(host='0.0.0.0', port=enrolled.port, ssl_context=(enrolled.crt_path, enrolled.key_path))
     ipv6.del_addr(enrolled.ifname, enrolled.addr)
 
 
