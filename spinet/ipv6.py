@@ -7,7 +7,7 @@ def random_addr():
     '''Generate a random link-local IPv6 address
     '''
     d = binascii.hexlify(os.urandom(8)).decode('ascii')
-    return ('fe80::%s:%s:%s:%s' % (d[0:4], d[4:8], d[8:12], d[12:16]), 64)
+    return ('2222::%s:%s:%s:%s' % (d[0:4], d[4:8], d[8:12], d[12:16]), 64)
 
 
 def add_addr(ifname, addr):
